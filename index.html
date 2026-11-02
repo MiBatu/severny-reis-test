@@ -19,7 +19,7 @@
 }
 :root[data-size="s"] { --text-size: 16px; }
 :root[data-size="l"] { --text-size: 21px; }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; touch-action: manipulation; } /* no double-tap zoom: iOS otherwise holds every tap back to wait for a second one */
 html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); overflow: hidden; }
 body {
   font: 16px/1.45 var(--font-ui); -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
@@ -7605,8 +7605,9 @@ SR.minigames = SR.minigames || { _reg: {}, register(id, d) { this._reg[id] = d; 
       el.addEventListener('focus', () => { if (el.matches(':focus-visible')) show(el); });
       el.addEventListener('blur', () => hide(el));
       el.addEventListener('click', () => { if (el.tagName === 'BUTTON') hide(el); });
-      if (el.tagName !== 'BUTTON') el.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') return; show(el); clearTimeout(timer); timer = setTimeout(() => hide(el), 1800); });
+      if (el.tagName !== 'BUTTON') el.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') return; show(el); clearTimeout(timer); timer = setTimeout(() => hide(el), 4000); });
     }
+    document.addEventListener('pointerdown', (e) => { if (cur && !cur.contains(e.target)) hide(); }, true); // a tap elsewhere closes it
     addEventListener('resize', () => hide());
   }
 
